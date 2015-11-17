@@ -171,3 +171,12 @@ function uimods_civicrm_searchColumns( $objectName, &$headers,  &$values, &$sele
     }
   }
 }
+
+/** 
+ * Make campaign_id (destination code) required for contributions
+ */
+function uimods_civicrm_buildForm($formName, &$form) {
+  if ($formName == 'CRM_Contribute_Form_Contribution') {
+    $form->addRule('campaign_id', ts('Please enter a destination code'), 'required', NULL, NULL, NULL, TRUE);
+  }
+}
