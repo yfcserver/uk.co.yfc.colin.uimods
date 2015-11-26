@@ -180,3 +180,46 @@ function uimods_civicrm_buildForm($formName, &$form) {
     $form->addRule('campaign_id', ts('Please enter a destination code'), 'required', NULL, NULL, NULL, TRUE);
   }
 }
+
+
+/**
+ * put the new rcontribtion edit mask in the action links
+ */
+function uimods_civicrm_links( $op, $objectName, $objectId, &$links, &$mask, &$values ) {
+  if ($op == 'contribution.selector.recurring') {
+    foreach ($links as $key => &$link) {
+      if ($link['name'] == 'Edit') {
+        $link['url'] = 'civicrm/rcontribution/edit';
+        $link['qs'] = 'reset=1&rcid=%%crid%%';
+        // $link['class'] = 'no-popup';
+      }
+    }
+  }
+}
+
+/**
+ * put a new rcontribtion edit button in rcontribution view
+ */
+function uimods_civicrm_pageRun(&$page) {
+  $pageName = $page->getVar('_name');
+  if ($pageName == 'CRM_Contribute_Page_ContributionRecur') {
+    CRM_Core_Region::instance('page-body')->add(array(
+      'template' => 'CRM/Uimods/Page/ContributionRecur.uimods.tpl'
+    ));
+  }
+}
+
+/**
+ * put a new rcontribtion action in summary action list
+ */
+function uimods_civicrm_summaryActions( &$actions, $contactID ) {
+  $actions['add_rcontribution'] = array(
+      'title'           => ts("Add Recurring Contribution"),
+      'weight'          => 5,
+      'ref'             => 'add-recurring-contribution',
+      'key'             => 'add_rcontribution',
+      'component'       => 'CiviContribute',
+      'href'            => CRM_Utils_System::url('civicrm/rcontribution/edit', "cid=$contactID"),
+      'permissions'     => array('access CiviContribute', 'edit contributions')
+    );
+}

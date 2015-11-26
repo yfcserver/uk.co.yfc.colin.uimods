@@ -81,7 +81,7 @@ class CRM_Uimods_Form_RecurEdit extends CRM_Core_Form {
       array('value' => $this->getCurrentValue('amount', $rcontribution), 'size'=>4),
       true
     );
-    $this->addRule('amount', "Please enter a full amount.", 'positiveInteger');
+    $this->addRule('amount', "Please enter a valid amount.", 'money');
 
     $frequency = $this->add(
       'select',
@@ -138,13 +138,15 @@ class CRM_Uimods_Form_RecurEdit extends CRM_Core_Form {
       'start_date',
       'Begins',
       true, 
-      array('value' => $this->getCurrentValue('start_date', $rcontribution)));
+      array('formatType' => 'searchDate', 'value' => $this->getCurrentDate('start_date', $rcontribution))
+      );
 
     $this->addDate(
       'end_date',
       'Ends',
       false, 
-      array('value' => $this->getCurrentValue('end_date', $rcontribution)));
+      array('formatType' => 'searchDate', 'value' => $this->getCurrentDate('end_date', $rcontribution))
+      );
 
     $contribution_status_id = $this->add(
       'select',
@@ -212,6 +214,11 @@ class CRM_Uimods_Form_RecurEdit extends CRM_Core_Form {
       'financial_type_id'      => $values['financial_type_id'],
       );
 
+    // set ID (causes update instead of create)
+    if (!empty($values['rcontribution_id'])) {
+      $rcontribution['id'] = (int) $values['rcontribution_id'];
+    }
+
     // add cycle period
     $period = preg_split("/-/", $values['frequency']);
     $rcontribution['frequency_interval'] = $period[0];
@@ -234,8 +241,8 @@ class CRM_Uimods_Form_RecurEdit extends CRM_Core_Form {
       CRM_Core_Session::setStatus(ts('Recurring contribution [%1] updated.', array(1 => $result['id'])), ts("Success"), "info");
     }
 
-    $contact_url = CRM_Utils_System::url('civicrm/contact/view', "reset=1&cid={$rcontribution['contact_id']}&selectedChild=contribute");
-    CRM_Utils_System::redirect($contact_url);
+    // $contact_url = CRM_Utils_System::url('civicrm/contact/view', "reset=1&cid={$rcontribution['contact_id']}&selectedChild=contribute");
+    // CRM_Utils_System::redirect($contact_url);
 
     parent::postProcess();
   }
@@ -253,4 +260,15 @@ class CRM_Uimods_Form_RecurEdit extends CRM_Core_Form {
     }
   }
 
+  /**
+   * same as getCurrentValue but adds date formatting
+   */
+  public function getCurrentDate($key, $rcontribution) {
+    $date = $this->getCurrentValue($key, $rcontribution);
+    if (empty($date)) {
+      return NULL;
+    } else {
+      return date('m/d/Y', strtotime($date));
+    }
+  }
 }
