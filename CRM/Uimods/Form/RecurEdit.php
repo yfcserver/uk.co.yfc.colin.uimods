@@ -203,6 +203,15 @@ class CRM_Uimods_Form_RecurEdit extends CRM_Core_Form {
   public function postProcess() {
     $values = $this->exportValues();
 
+    // store last selection (per user)
+    $session = CRM_Core_Session::singleton();
+    $user_contact = (int) $session->get('userID');
+    CRM_Core_BAO_Setting::setItem($values['campaign_id'],            'uk.co.yfc.colin.uimods', 'last_campaign_id', NULL, $user_contact);
+    CRM_Core_BAO_Setting::setItem($values['cycle_day'],              'uk.co.yfc.colin.uimods', 'last_cycle_day', NULL, $user_contact);
+    CRM_Core_BAO_Setting::setItem($values['financial_type_id'],      'uk.co.yfc.colin.uimods', 'last_financial_type_id', NULL, $user_contact);
+    CRM_Core_BAO_Setting::setItem($values['frequency'],              'uk.co.yfc.colin.uimods', 'last_frequency', NULL, $user_contact);
+    CRM_Core_BAO_Setting::setItem($values['contribution_status_id'], 'uk.co.yfc.colin.uimods', 'last_contribution_status_id', NULL, $user_contact);
+
     // compile contribution object with required values
     $rcontribution = array(
       'contact_id'             => $values['contact_id'],
@@ -255,8 +264,12 @@ class CRM_Uimods_Form_RecurEdit extends CRM_Core_Form {
   public function getCurrentValue($key, $rcontribution) {
     if (!empty($this->_submitValues)) {
       return CRM_Utils_array::value($key, $this->_submitValues);
-    } else {
+    } elseif (CRM_Utils_Array::value($key, $rcontribution)) {
       return CRM_Utils_Array::value($key, $rcontribution);
+    } else {
+      $session = CRM_Core_Session::singleton();
+      $user_contact = (int) $session->get('userID');
+      return CRM_Core_BAO_Setting::getItem('uk.co.yfc.colin.uimods', "last_$key", NULL, NULL, $user_contact);
     }
   }
 
