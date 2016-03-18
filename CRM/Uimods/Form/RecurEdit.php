@@ -38,11 +38,9 @@ class CRM_Uimods_Form_RecurEdit extends CRM_Core_Form {
     } elseif (!empty($_REQUEST['cid'])) {
       $contact_id = (int) $_REQUEST['cid'];
       $rcontribution = array('contact_id' => $contact_id);
-      CRM_Utils_System::setTitle('Create Recurring Contribution');
     } elseif (!empty($this->_submitValues['contact_id'])) {
       $contact_id = (int) $this->_submitValues['contact_id'];
       $rcontribution = array('contact_id' => $contact_id);
-      CRM_Utils_System::setTitle('Create Recurring Contribution');
     } else {
       // no rcid or cid: ERROR
       CRM_Core_Session::setStatus('Error. You need provide cid or rcid.', 'Error', 'error');
