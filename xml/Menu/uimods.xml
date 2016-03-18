@@ -3,7 +3,7 @@
   <item>
     <path>civicrm/rcontribution/edit</path>
     <page_callback>CRM_Uimods_Form_RecurEdit</page_callback>
-    <title>Edit Recurring Contribution</title>
+    <title>RecurEdit</title>
     <access_arguments>access CiviCRM</access_arguments>
   </item>
 </menu>
