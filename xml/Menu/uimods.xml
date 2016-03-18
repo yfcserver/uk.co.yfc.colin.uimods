@@ -1,9 +1,0 @@
-<?xml version="1.0"?>
-<menu>
-  <item>
-    <path>civicrm/rcontribution/edit</path>
-    <page_callback>CRM_Uimods_Form_RecurEdit</page_callback>
-    <title>RecurEdit</title>
-    <access_arguments>access CiviCRM</access_arguments>
-  </item>
-</menu>
