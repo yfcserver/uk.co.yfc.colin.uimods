@@ -44,7 +44,7 @@
     </tr>
     <tr class="crm-rcontribution-form-block-start_date">
       <td class="label">{$form.start_date.label}</td>
-      <td>{include file="CRM/common/jcalendar.tpl" elementName=start_date}</td>
+      <td class="content">{include file="CRM/common/jcalendar.tpl" elementName=start_date}</td>
     </tr>
     <tr class="crm-rcontribution-form-block-end_date">
       <td class="label">{$form.end_date.label}</td>
