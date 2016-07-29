@@ -1,5 +1,18 @@
 <?php
-
+/*-------------------------------------------------------+
+| YFC Colin/CiviCRM UI Modifications                     |
+| Copyright (C) 2016 SYSTOPIA                            |
+| Author: B. Endres (endres -at- systopia.de)            |
+| http://www.systopia.de/                                |
++--------------------------------------------------------+
+| This program is released as free software under the    |
+| Affero GPL license. You can redistribute it and/or     |
+| modify it under the terms of this license which you    |
+| can read by viewing the included agpl.txt or online    |
+| at www.gnu.org/licenses/agpl.html. Removal of this     |
+| copyright header is strictly prohibited without        |
+| written permission from the original author(s).        |
++--------------------------------------------------------*/
 require_once 'uimods.civix.php';
 
 /**
@@ -178,5 +191,15 @@ function uimods_civicrm_searchColumns( $objectName, &$headers,  &$values, &$sele
 function uimods_civicrm_buildForm($formName, &$form) {
   if ($formName == 'CRM_Contribute_Form_Contribution') {
     $form->addRule('campaign_id', ts('Please enter a destination code'), 'required', NULL, NULL, NULL, TRUE);
+  }
+}
+
+/**
+ * Implements hook_civicrm_apiWrappers
+ */
+function uimods_civicrm_apiWrappers(&$wrappers, $apiRequest) {
+  // add a wrapper for Contact.getlist (used e.g. for AJAX lookups)
+  if ($apiRequest['entity'] == 'Contact' && $apiRequest['action'] == 'getlist') {
+    $wrappers[] = new CRM_Uimods_ListContactWrapper();
   }
 }
