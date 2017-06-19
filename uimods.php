@@ -185,12 +185,21 @@ function uimods_civicrm_searchColumns( $objectName, &$headers,  &$values, &$sele
   }
 }
 
-/** 
- * Make campaign_id (destination code) required for contributions
+/**
+ * Implements hook_civicrm_buildForm for the following purposes
+ *  - make campaign_id (destination code) required for contributions
+ *  - display batches for contribution view
  */
 function uimods_civicrm_buildForm($formName, &$form) {
   if ($formName == 'CRM_Contribute_Form_Contribution') {
     $form->addRule('campaign_id', ts('Please enter a destination code'), 'required', NULL, NULL, NULL, TRUE);
+
+  } elseif ($formName == 'CRM_Contribute_Form_ContributionView') {
+    // add batches
+    $script = file_get_contents(__DIR__ . '/js/append_batch_list.js');
+    $batches = CRM_Uimods_ContributionBatches::getBatchData($form->get('id'));
+    $script = str_replace('BATCHES', json_encode($batches), $script);
+    CRM_Core_Region::instance('page-footer')->add(array('script' => $script));
   }
 }
 
