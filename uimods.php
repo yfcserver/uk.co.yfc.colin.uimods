@@ -16,6 +16,18 @@
 require_once 'uimods.civix.php';
 
 /**
+ * Implements hook_alterLogTables().
+ *
+ * @param array $logTableSpec
+ */
+function uimods_civicrm_alterLogTables(&$logTableSpec) {
+  // disable logging for log_civicrm_group
+  if (isset($logTableSpec['civicrm_group'])) {
+    unset($logTableSpec['civicrm_group']);
+  }
+}
+
+/**
  * Implements hook_civicrm_config().
  *
  * @link http://wiki.civicrm.org/confluence/display/CRMDOC/hook_civicrm_config
